@@ -1,6 +1,6 @@
 # pool-party
 
-An example application exposing runaway connection attempts using the [pgxpool](https://pkg.go.dev/github.com/jackc/pgx/v4/pgxpool) package.
+An example application exposing runaway connection attempts using the [pgxpool](https://pkg.go.dev/github.com/jackc/pgx/v5/pgxpool) package.
 
 ## Usage
 

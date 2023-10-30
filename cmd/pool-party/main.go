@@ -2,14 +2,14 @@ package main
 
 import (
 	"context"
+	pgxzap "github.com/jackc/pgx-zap"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/tracelog"
+	"go.uber.org/zap"
 	"math/rand"
 	"time"
 
-	"github.com/jackc/pgx/v4"
-	"github.com/jackc/pgx/v4/log/zapadapter"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/mbrancato/pool-party/internal/queries"
-	"go.uber.org/zap"
 )
 
 var logger *zap.Logger
@@ -108,10 +108,14 @@ func connectDb() *pgxpool.Pool {
 	}
 	poolConfig.MaxConns = 4
 	poolConfig.MinConns = 4
-	poolConfig.ConnConfig.Logger = zapadapter.NewLogger(logger)
-	poolConfig.ConnConfig.LogLevel = pgx.LogLevelDebug
+	l := pgxzap.NewLogger(logger)
+	tracer := &tracelog.TraceLog{
+		Logger:   l,
+		LogLevel: tracelog.LogLevelDebug,
+	}
+	poolConfig.ConnConfig.Tracer = tracer
 
-	dbPool, err := pgxpool.ConnectConfig(ctx, poolConfig)
+	dbPool, err := pgxpool.NewWithConfig(ctx, poolConfig)
 	if err != nil {
 		sugar.Fatalf("error connecting to DB: %v", err)
 	}

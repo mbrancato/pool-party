@@ -5,5 +5,5 @@ sql:
     gen:
       go:
         package: "queries"
-        sql_package: "pgx/v4"
+        sql_package: "pgx/v5"
         out: "internal/queries"
