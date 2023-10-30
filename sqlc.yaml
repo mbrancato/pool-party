@@ -1,0 +1,9 @@
+version: 2
+sql:
+  - queries: "assets/queries.sql"
+    engine: "postgresql"
+    gen:
+      go:
+        package: "queries"
+        sql_package: "pgx/v4"
+        out: "internal/queries"
